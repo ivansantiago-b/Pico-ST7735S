@@ -1,0 +1,2 @@
+add_subdirectory(st7735s_test)
+add_subdirectory(mandelbrot_set)
