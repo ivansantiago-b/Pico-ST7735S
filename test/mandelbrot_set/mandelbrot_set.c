@@ -7,7 +7,7 @@ int main(void)
     st7735s_init();
     uint8_t frame[25600];
 
-    uint max_iteration = 63;
+    uint max_iteration = 127;
     uint i = 0;
     float x, y, x0, y0;
     float x_min = -2.0f;
@@ -17,7 +17,8 @@ int main(void)
     float x_step = (x_max - x_min) / (float)ST7735S_WIDTH;
     float y_step = (y_max - y_min) / (float)ST7735S_HEIGHT;
 
-    uint16_t color_table[8] = {0xFFFF, 0xE000, 0xC001, 0xA002, 0x8003, 0x6004, 0x4005, 0x2006};
+    uint16_t color_table[16] = {0xFFFF, 0xF45D, 0xE8BB, 0xDD19, 0xD177, 0xC5D5, 0xBA33, 0xAE91,
+    0xA2EF, 0x974D, 0x45DF, 0x3A3D, 0x2E9B, 0x22F9, 0x1757, 0x0BB5};
     while (true)
     {
         for (uint r = 0; r < ST7735S_HEIGHT; r++)
@@ -36,17 +37,18 @@ int main(void)
                     i++;
                 }
                 uint address = (r * ST7735S_WIDTH + c) << 1;
-                uint16_t color = i == max_iteration ? 0 : color_table[i % 8];
+                uint16_t color = i == max_iteration ? 0 : color_table[i % 16];
                 frame[address] = color >> 8;
                 frame[++address] = color >> 0;
             }
         }
+        x_min += 0.01;
+        x_max -= 0.01;
+        y_min += 0.02;
+        y_max -= 0.02;
+        x_step = (x_max - x_min) / (float)ST7735S_WIDTH;
+        y_step = (y_max - y_min) / (float)ST7735S_HEIGHT;
         st7735s_update(frame);
-        for (unsigned int i = 0; i < 8; i++)
-        {
-            color_table[i] += 1;
-        }
-        sleep_ms(20);
     }
     return 0;
 }
